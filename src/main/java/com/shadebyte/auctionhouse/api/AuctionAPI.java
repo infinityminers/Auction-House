@@ -8,7 +8,6 @@ import com.shadebyte.auctionhouse.util.NBTEditor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -87,10 +86,9 @@ public class AuctionAPI {
         }
         return items;
     }
-
     public ItemStack createConfigItem(String node, int activeAuctions, int expiredAuctions) {
         String[] rawItem = Core.getInstance().getConfig().getString(node + ".item").split(":");
-        ItemStack stack = new ItemStack(Material.valueOf(rawItem[0].toUpperCase()), 1, Short.parseShort(rawItem[1]));
+        ItemStack stack = new ItemStack(XMaterial.requestXMaterial(rawItem[0].toUpperCase(), Byte.parseByte(rawItem[1])).parseMaterial());
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Core.getInstance().getConfig().getString(node + ".name")));
         List<String> lore = new ArrayList<>();
@@ -104,7 +102,7 @@ public class AuctionAPI {
 
     public ItemStack createTransactionConfigItem(String node, String buyer, String seller, int startPrice, int bidincrement, int buynowprice) {
         String[] rawItem = Core.getInstance().getConfig().getString(node + ".item").split(":");
-        ItemStack stack = new ItemStack(Material.valueOf(rawItem[0].toUpperCase()), 1, Short.parseShort(rawItem[1]));
+        ItemStack stack = new ItemStack(XMaterial.requestXMaterial(rawItem[0].toUpperCase(), Byte.parseByte(rawItem[1])).parseMaterial());
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Core.getInstance().getConfig().getString(node + ".name")));
         List<String> lore = new ArrayList<>();
@@ -115,7 +113,7 @@ public class AuctionAPI {
     }
 
     public ItemStack createUserHead(String node, String seller, String buyer, int usr) {
-        ItemStack stack = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemStack stack = new ItemStack(XMaterial.PLAYER_HEAD.parseMaterial());
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Core.getInstance().getConfig().getString(node + ".name")));
         meta.setOwner((usr == 0) ? Bukkit.getOfflinePlayer(UUID.fromString(seller)).getName() : Bukkit.getOfflinePlayer(UUID.fromString(buyer)).getName());
@@ -190,7 +188,7 @@ public class AuctionAPI {
     }
 
     public ItemStack fill(String name) {
-        ItemStack stack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 1);
+        ItemStack stack = new ItemStack(XMaterial.LIGHT_GRAY_STAINED_GLASS_PANE.parseMaterial());
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&l" + name));
         stack.setItemMeta(meta);
@@ -198,7 +196,7 @@ public class AuctionAPI {
     }
 
     public ItemStack fill(String name, int color) {
-        ItemStack stack = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) color);
+        ItemStack stack = new ItemStack(XMaterial.requestXMaterial("STAINED_GLASS_PANE", (byte) color).parseMaterial());
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6&l" + name));
         stack.setItemMeta(meta);

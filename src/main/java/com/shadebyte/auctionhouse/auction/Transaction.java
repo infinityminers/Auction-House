@@ -1,10 +1,10 @@
 package com.shadebyte.auctionhouse.auction;
 
 import com.shadebyte.auctionhouse.Core;
+import com.shadebyte.auctionhouse.api.XMaterial;
 import com.shadebyte.auctionhouse.util.NBTEditor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -82,7 +82,7 @@ public class Transaction {
 
     private static ItemStack getTransactionItem(String node) {
         String[] stack = Core.getInstance().getConfig().getString("transaction.item").split(":");
-        ItemStack item = new ItemStack(Material.valueOf(stack[0].toUpperCase()), 1, Short.parseShort(stack[1]));
+        ItemStack item = new ItemStack(XMaterial.requestXMaterial(stack[0].toUpperCase(), Byte.parseByte(stack[1])).parseMaterial());
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Core.getInstance().getConfig().getString("transaction.name").replace("{transaction_id}", Core.getInstance().getTransactions().getConfig().getString("transactions." + node + ".auction-id"))));
         List<String> lore = new ArrayList<>();

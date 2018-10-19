@@ -58,7 +58,7 @@ public class TransactionListener implements Listener {
                                 FieldEmbed.builder().name("Buyer").value(Bukkit.getOfflinePlayer(UUID.fromString(e.getTransaction().getBuyer())).getName()).build(),
                                 FieldEmbed.builder().name("Transaction Type").value(e.getTransaction().getTransactionType().getTransactionType()).build(),
                                 FieldEmbed.builder().name("Price").value(AuctionAPI.getInstance().friendlyNumber((e.getTransaction().getTransactionType() == Transaction.TransactionType.BOUGHT) ? e.getTransaction().getAuctionItem().getBuyNowPrice() : e.getTransaction().getAuctionItem().getCurrentPrice())).build(),
-                                FieldEmbed.builder().name("Item").value(e.getTransaction().getAuctionItem().getItem().getType().name() + ":" + e.getTransaction().getAuctionItem().getItem().getDurability()).build()
+                                FieldEmbed.builder().name("Item").value(e.getTransaction().getAuctionItem().getItem().getType().name() + ":" + e.getTransaction().getAuctionItem().getItem().getData().getData()).build()
                         ))
                         .build();
 

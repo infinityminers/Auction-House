@@ -30,7 +30,7 @@ public class MySQL {
                 insert.setInt(4, transaction.getAuctionItem().getStartPrice());
                 insert.setInt(5, transaction.getAuctionItem().getBuyNowPrice());
                 insert.setInt(6, transaction.getAuctionItem().getBidIncrement());
-                insert.setString(7, transaction.getAuctionItem().getItem().getTypeId() + "-" + transaction.getAuctionItem().getItem().getDurability());
+                insert.setString(7, transaction.getAuctionItem().getItem().getType().name() + "-" + transaction.getAuctionItem().getItem().getData().getData());
 
                 insert.setString(8, AuctionAPI.getInstance().getSQLDisplayName(transaction.getAuctionItem().getItem()));
                 insert.setString(9, AuctionAPI.getInstance().getSQLLore(transaction.getAuctionItem().getItem()));
