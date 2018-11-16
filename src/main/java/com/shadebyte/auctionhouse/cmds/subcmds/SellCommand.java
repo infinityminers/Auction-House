@@ -55,7 +55,17 @@ public class SellCommand extends SubCommand {
                     p.sendMessage(Core.getInstance().getSettings().getPrefix() + Core.getInstance().getLocale().getMessage(Lang.CMD_SELL.getNode()));
                 } else {
 
+                    if (new AuctionPlayer(p).getLimit() - 1 < new AuctionPlayer(p).getTotalActiveAuctions()) {
+                        p.sendMessage(Core.getInstance().getSettings().getPrefix() + Core.getInstance().getLocale().getMessage(Lang.AUCTION_MAX.getNode()));
+                        return;
+                    }
+
                     int buyNow = Integer.parseInt(args[1]);
+
+                    if (AuctionAPI.getItemInHand(p) == null || AuctionAPI.getItemInHand(p).getType() == Material.AIR) {
+                        p.sendMessage(Core.getInstance().getSettings().getPrefix() + Core.getInstance().getLocale().getMessage(Lang.AIR.getNode()));
+                        return;
+                    }
 
                     //Max Prices
                     if (buyNow > Core.getInstance().getConfig().getInt("settings.max-auction-price")) {

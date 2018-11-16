@@ -59,7 +59,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-        <version>1.13-R0.1-SNAPSHOT</version>
+        <version>1.13.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -89,17 +89,39 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>net.milkbowl.vault</groupId>
-      <artifactId>VaultAPI</artifactId>
-      <version>1.6</version>
+        <groupId>org.bukkit</groupId>
+        <artifactId>bukkit</artifactId>
+        <version>1.13.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>bukkit</artifactId>
-          <groupId>org.bukkit</groupId>
+            <artifactId>commons-lang</artifactId>
+            <groupId>commons-lang</groupId>
+        </exclusion>
+          <exclusion>
+              <artifactId>json-simple</artifactId>
+              <groupId>com.googlecode.json-simple</groupId>
+          </exclusion>
+          <exclusion>
+              <artifactId>guava</artifactId>
+              <groupId>com.google.guava</groupId>
+          </exclusion>
+          <exclusion>
+              <artifactId>gson</artifactId>
+              <groupId>com.google.code.gson</groupId>
+          </exclusion>
+          <exclusion>
+              <artifactId>snakeyaml</artifactId>
+              <groupId>org.yaml</groupId>
         </exclusion>
       </exclusions>
     </dependency>
+      <dependency>
+          <groupId>net.milkbowl.vault</groupId>
+          <artifactId>VaultAPI</artifactId>
+          <version>1.6</version>
+          <scope>provided</scope>
+      </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>

@@ -18,19 +18,20 @@ import java.util.regex.Pattern;
 
 /**
  * Sets/Gets NBT tags from ItemStacks
+ * Supports 1.8-1.13
  *
+ * @version 6.5
  * @author BananaPuncher714
- * @version 5.0
  */
 public class NBTEditor {
-    private static HashMap<String, Class<?>> classCache;
-    private static HashMap<String, Method> methodCache;
-    private static HashMap<Class<?>, Constructor<?>> constructorCache;
-    private static HashMap<Class<?>, Class<?>> NBTClasses;
-    private static HashMap<Class<?>, Field> NBTTagFieldCache;
+    private static final Map<String, Class<?>> classCache;
+    private static final Map<String, Method> methodCache;
+    private static final Map<Class<?>, Constructor<?>> constructorCache;
+    private static final Map<Class<?>, Class<?>> NBTClasses;
+    private static final Map<Class<?>, Field> NBTTagFieldCache;
     private static Field NBTListData;
     private static Field NBTCompoundMap;
-    private static String version;
+    private static final String version;
 
     static {
         version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -93,15 +94,13 @@ public class NBTEditor {
             methodCache.put("getEntityTag", getNMSClass("Entity").getMethod("c", getNMSClass("NBTTagCompound")));
             methodCache.put("setEntityTag", getNMSClass("Entity").getMethod("f", getNMSClass("NBTTagCompound")));
 
-            if (version.contains("1_12")) {
+            if (version.contains("1_12") || version.contains("1_13")) {
                 methodCache.put("setTileTag", getNMSClass("TileEntity").getMethod("load", getNMSClass("NBTTagCompound")));
             } else {
                 methodCache.put("setTileTag", getNMSClass("TileEntity").getMethod("a", getNMSClass("NBTTagCompound")));
             }
             methodCache.put("getTileEntity", getNMSClass("World").getMethod("getTileEntity", getNMSClass("BlockPosition")));
             methodCache.put("getWorldHandle", getNMSClass("CraftWorld").getMethod("getHandle"));
-
-            //methodCache.put( "setGameProfile", getNMSClass( "TileEntitySkull" ).getMethod( "setGameProfile", GameProfile.class ) );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -213,12 +212,18 @@ public class NBTEditor {
     /**
      * Gets an NBT tag in a given item with the specified keys
      *
-     * @param item The itemstack to get the keys from
-     * @param key  The keys to fetch; an integer after a key value indicates that it should get the nth place of
-     *             the previous compound because it is a list;
-     * @return The item represented by the keys, and an integer if it is showing how long a list is.
+     * @param item
+     * The itemstack to get the keys from
+     * @param key
+     * The keys to fetch; an integer after a key value indicates that it should get the nth place of
+     * the previous compound because it is a list;
+     * @return
+     * The item represented by the keys, and an integer if it is showing how long a list is.
      */
     public static Object getItemTag(ItemStack item, Object... keys) {
+        if (item == null) {
+            return null;
+        }
         try {
             Object stack = null;
             stack = getMethod("asNMSCopy").invoke(null, item);
@@ -241,12 +246,19 @@ public class NBTEditor {
     /**
      * Sets an NBT tag in an item with the provided keys and value
      *
-     * @param item  The itemstack to set
-     * @param key   The keys to set, String for NBTCompound, int or null for an NBTTagList
-     * @param value The value to set
-     * @return A new ItemStack with the updated NBT tags
+     * @param item
+     * The itemstack to set
+     * @param key
+     * The keys to set, String for NBTCompound, int or null for an NBTTagList
+     * @param value
+     * The value to set
+     * @return
+     * A new ItemStack with the updated NBT tags
      */
     public static ItemStack setItemTag(ItemStack item, Object value, Object... keys) {
+        if (item == null) {
+            return null;
+        }
         try {
             Object stack = getMethod("asNMSCopy").invoke(null, item);
 
@@ -270,12 +282,18 @@ public class NBTEditor {
     /**
      * Gets an NBT tag in a given entity with the specified keys
      *
-     * @param block The entity to get the keys from
-     * @param key   The keys to fetch; an integer after a key value indicates that it should get the nth place of
-     *              the previous compound because it is a list;
-     * @return The item represented by the keys, and an integer if it is showing how long a list is.
+     * @param block
+     * The entity to get the keys from
+     * @param key
+     * The keys to fetch; an integer after a key value indicates that it should get the nth place of
+     * the previous compound because it is a list;
+     * @return
+     * The item represented by the keys, and an integer if it is showing how long a list is.
      */
     public static Object getEntityTag(Entity entity, Object... keys) {
+        if (entity == null) {
+            return entity;
+        }
         try {
             Object NMSEntity = getMethod("getEntityHandle").invoke(entity);
 
@@ -293,12 +311,19 @@ public class NBTEditor {
     /**
      * Sets an NBT tag in an entity with the provided keys and value
      *
-     * @param item  The entity to set
-     * @param key   The keys to set, String for NBTCompound, int or null for an NBTTagList
-     * @param value The value to set
-     * @return A new ItemStack with the updated NBT tags
+     * @param item
+     * The entity to set
+     * @param key
+     * The keys to set, String for NBTCompound, int or null for an NBTTagList
+     * @param value
+     * The value to set
+     * @return
+     * A new ItemStack with the updated NBT tags
      */
     public static void setEntityTag(Entity entity, Object value, Object... keys) {
+        if (entity == null) {
+            return;
+        }
         try {
             Object NMSEntity = getMethod("getEntityHandle").invoke(entity);
 
@@ -318,20 +343,30 @@ public class NBTEditor {
     /**
      * Gets an NBT tag in a given block with the specified keys
      *
-     * @param block The block to get the keys from
-     * @param key   The keys to fetch; an integer after a key value indicates that it should get the nth place of
-     *              the previous compound because it is a list;
-     * @return The item represented by the keys, and an integer if it is showing how long a list is.
+     * @param block
+     * The block to get the keys from
+     * @param key
+     * The keys to fetch; an integer after a key value indicates that it should get the nth place of
+     * the previous compound because it is a list;
+     * @return
+     * The item represented by the keys, and an integer if it is showing how long a list is.
      */
     public static Object getBlockTag(Block block, Object... keys) {
         try {
-            if (!getNMSClass("CraftBlockState").isInstance(block.getState())) {
+            if (block == null || !getNMSClass("CraftBlockState").isInstance(block.getState())) {
                 return null;
             }
+            Location location = block.getLocation();
 
-            Object tileEntity = getMethod("getTileEntity").invoke(block.getState());
+            Object blockPosition = getConstructor(getNMSClass("BlockPosition")).newInstance(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
-            Object tag = getMethod("getTileTag").invoke(tileEntity, getNMSClass("NBTTagCompound").newInstance());
+            Object nmsWorld = getMethod("getWorldHandle").invoke(location.getWorld());
+
+            Object tileEntity = getMethod("getTileEntity").invoke(nmsWorld, blockPosition);
+
+            Object tag = getNMSClass("NBTTagCompound").newInstance();
+
+            getMethod("getTileTag").invoke(tileEntity, tag);
 
             return getTag(tag, keys);
         } catch (Exception exception) {
@@ -343,13 +378,20 @@ public class NBTEditor {
     /**
      * Sets an NBT tag in an block with the provided keys and value
      *
-     * @param item  The block to set
-     * @param key   The keys to set, String for NBTCompound, int or null for an NBTTagList
-     * @param value The value to set
-     * @return A new ItemStack with the updated NBT tags
+     * @param item
+     * The block to set
+     * @param key
+     * The keys to set, String for NBTCompound, int or null for an NBTTagList
+     * @param value
+     * The value to set
+     * @return
+     * A new ItemStack with the updated NBT tags
      */
     public static void setBlockTag(Block block, Object value, Object... keys) {
         try {
+            if (block == null || !getNMSClass("CraftBlockState").isInstance(block.getState())) {
+                return;
+            }
             Location location = block.getLocation();
 
             Object blockPosition = getConstructor(getNMSClass("BlockPosition")).newInstance(location.getBlockX(), location.getBlockY(), location.getBlockZ());
@@ -358,7 +400,9 @@ public class NBTEditor {
 
             Object tileEntity = getMethod("getTileEntity").invoke(nmsWorld, blockPosition);
 
-            Object tag = getMethod("getTileTag").invoke(tileEntity, getNMSClass("NBTTagCompound").newInstance());
+            Object tag = getNMSClass("NBTTagCompound").newInstance();
+
+            getMethod("getTileTag").invoke(tileEntity, tag);
 
             setTag(tag, value, keys);
 
@@ -407,13 +451,16 @@ public class NBTEditor {
     }
 
     private static Object getTag(Object tag, Object... keys) throws Exception {
-        if (keys.length == 0) return getTags(tag);
+        if (keys.length == 0) {
+            return getTags(tag);
+        }
 
         Object notCompound = tag;
 
         for (Object key : keys) {
-            if (notCompound == null) return null;
-            if (getNMSClass("NBTTagCompound").isInstance(notCompound)) {
+            if (notCompound == null) {
+                return null;
+            } else if (getNMSClass("NBTTagCompound").isInstance(notCompound)) {
                 notCompound = getMethod("get").invoke(notCompound, (String) key);
             } else if (getNMSClass("NBTTagList").isInstance(notCompound)) {
                 notCompound = ((List<?>) NBTListData.get(notCompound)).get((int) key);
@@ -421,8 +468,9 @@ public class NBTEditor {
                 return getNBTVar(notCompound);
             }
         }
-        if (notCompound == null) return null;
-        if (getNMSClass("NBTTagList").isInstance(notCompound)) {
+        if (notCompound == null) {
+            return null;
+        } else if (getNMSClass("NBTTagList").isInstance(notCompound)) {
             return getTags(notCompound);
         } else if (getNMSClass("NBTTagCompound").isInstance(notCompound)) {
             return getTags(notCompound);
@@ -431,21 +479,26 @@ public class NBTEditor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static Object getTags(Object tag) {
-        HashMap<Object, Object> tags = new HashMap<Object, Object>();
+        Map<Object, Object> tags = new HashMap<Object, Object>();
         try {
             if (getNMSClass("NBTTagCompound").isInstance(tag)) {
                 Map<String, Object> tagCompound = (Map<String, Object>) NBTCompoundMap.get(tag);
                 for (String key : tagCompound.keySet()) {
                     Object value = tagCompound.get(key);
-                    if (getNMSClass("NBTTagEnd").isInstance(value)) continue;
+                    if (getNMSClass("NBTTagEnd").isInstance(value)) {
+                        continue;
+                    }
                     tags.put(key, getTag(value));
                 }
             } else if (getNMSClass("NBTTagList").isInstance(tag)) {
                 List<Object> tagList = (List<Object>) NBTListData.get(tag);
                 for (int index = 0; index < tagList.size(); index++) {
                     Object value = tagList.get(index);
-                    if (getNMSClass("NBTTagEnd").isInstance(value)) continue;
+                    if (getNMSClass("NBTTagEnd").isInstance(value)) {
+                        continue;
+                    }
                     tags.put(index, getTag(value));
                 }
             } else {

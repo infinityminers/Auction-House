@@ -1,7 +1,6 @@
 package com.shadebyte.auctionhouse.api;
 
 import com.shadebyte.auctionhouse.Core;
-import com.shadebyte.auctionhouse.api.enums.Version;
 import com.shadebyte.auctionhouse.auction.AuctionItem;
 import com.shadebyte.auctionhouse.util.Debugger;
 import com.shadebyte.auctionhouse.util.NBTEditor;
@@ -147,20 +146,12 @@ public class AuctionAPI {
 
     @SuppressWarnings("deprecation")
     public static ItemStack getItemInHand(Player player) {
-        if (Version.getCurrentVersion().getCurrentVersionInteger() >= Version.v1_9_R1.getCurrentVersionInteger()) {
-            return player.getInventory().getItemInMainHand();
-        } else {
-            return player.getItemInHand();
-        }
+        return player.getInventory().getItemInMainHand();
     }
 
     @SuppressWarnings("deprecation")
     public static void setItemInHand(Player player, ItemStack item) {
-        if (Version.getCurrentVersion().getCurrentVersionInteger() >= Version.v1_9_R1.getCurrentVersionInteger()) {
-            player.getInventory().setItemInMainHand(item);
-        } else {
-            player.setItemInHand(item);
-        }
+        player.getInventory().setItemInMainHand(item);
     }
 
     public String timeLeft(int totalSecs) {

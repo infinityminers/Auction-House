@@ -6,7 +6,7 @@
 
     <groupId>com.shadebyte</groupId>
     <artifactId>auctionhouse</artifactId>
-    <version>MC1.13-1.0.3</version>
+    <version>MC1.13v1.0.5</version>
     <packaging>jar</packaging>
 
     <name>AuctionHouse</name>
@@ -73,7 +73,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.13-R0.1-SNAPSHOT</version>
+            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.13.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
