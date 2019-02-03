@@ -2,6 +2,7 @@ package com.shadebyte.auctionhouse.cmds.subcmds;
 
 import com.shadebyte.auctionhouse.Core;
 import com.shadebyte.auctionhouse.api.AuctionAPI;
+import com.shadebyte.auctionhouse.api.XMaterial;
 import com.shadebyte.auctionhouse.api.discordwebhook.DiscordEmbed;
 import com.shadebyte.auctionhouse.api.discordwebhook.DiscordHook;
 import com.shadebyte.auctionhouse.api.discordwebhook.DiscordMessage;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,6 +45,28 @@ public class SellCommand extends SubCommand {
         }
 
         Player p = (Player) sender;
+
+        for (String bitems : Core.getInstance().getConfig().getStringList("blocked-items")) {
+            String[] item = bitems.split(":");
+            if (AuctionAPI.getItemInHand(p) != null || AuctionAPI.getItemInHand(p).getType() != Material.AIR) {
+                if (AuctionAPI.getItemInHand(p).getType() == XMaterial.requestXMaterial(item[0].toUpperCase(), Byte.parseByte(item[1])).parseMaterial()) {
+                    p.sendMessage(Core.getInstance().getSettings().getPrefix() + Core.getInstance().getLocale().getMessage(Lang.BLOCKED_ITEM.getNode()));
+                    return;
+                }
+            }
+        }
+
+        int timeLimit;
+        List<Integer> times = new ArrayList<>();
+
+        for (String nodes : Core.getInstance().getConfig().getStringList("time-limits")) {
+            if (p.hasPermission(nodes)) {
+                times.add(Core.getInstance().getConfig().getInt("time-limits." + nodes));
+            }
+        }
+
+        timeLimit = (times.size() <= 0) ? Core.getInstance().getConfig().getInt("settings.default-auction-time") : Collections.max(times);
+
 
         if (args.length == 1) {
             p.sendMessage(Core.getInstance().getSettings().getPrefix() + Core.getInstance().getLocale().getMessage(Lang.CMD_SELL.getNode()));

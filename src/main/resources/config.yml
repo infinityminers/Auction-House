@@ -3,6 +3,7 @@
 #have it in the same locale folder, just set new lang name here.
 #Lang name formats: https://www.science.co.il/language/Locale-codes.php
 lang: "en_US"
+debugger: true
 
 settings:
   default-auction-time: 150 # 15 Minutes by default
@@ -14,7 +15,7 @@ settings:
   min-auction-increment: 1
   owner-can-purchase-own: false
   owner-can-bid-own: false
-  use-bid-system: true
+  use-bid-system: false
   auto-refresh-auction-page: true
   bid:
     increase-on-bid: true
@@ -64,25 +65,59 @@ discord:
       inline: false
       data: "{item_lore}"
 
+#add permissions to allow more auction time.
+time-limits:
+  auctionhouse.times.default: 600
+  auctionhouse.times.rank1: 1200
 
+#Blocked items that cannot be listed on the auction house
+#You must include the type data (the number of : ) usually it's 0
+#unless you're targeting glass or a changable item on 1.12 or lower (most cases)
+blocked-items:
+- "ENDER_CHEST:0"
+
+auction-items:
+  use-short-form-number: true
+  auction-stack:
+  - "&7-------------------------"
+  - "&eSeller&f: &b{seller}"
+  - ""
+  - "&eBuy Now: &a${buynowprice}"
+  #- "&eCurrent Price: &a${currentprice}"
+  #- "&eBid Increment: &a${bidincrement}"
+  #- "&eHighest Bidder: &a${highestbidder}"
+  - ""
+  - "&eTime Left: &b{timeleft}"
+  - "&7-------------------------"
+  #- "&eLeft-Click&f: &bBid"
+  - "&eRight-Click&f: &bBuy Now"
+  - "&7-------------------------"
+  listing-stack:
+  - "&7-------------------------"
+  - "&eBuy Now: &a${buynowprice}"
+  #- "&eCurrent Price: &a${currentprice}"
+  #- "&eBid Increment: &a${bidincrement}"
+  #- "&eHighest Bidder: &a${highestbidder}"
+  - "&eTime Left: &b{timeleft}"
+  - "&7-------------------------"
 
 receipt:
   give-on-transaction: true
   item: "PAPER:0"
   name: "&E&LReceipt &7(Right-Click)"
   lore:
-    - "&7Purchase proof of the purchased item."
-    - ""
-    - "&bSeller&f: &E{seller}"
-    - "&bPrice&f: &a${price}"
-    - "&ePurchased on&f: &a{date} &fat &A{time}"
+  - "&7Purchase proof of the purchased item."
+  - ""
+  - "&bSeller&f: &E{seller}"
+  - "&bPrice&f: &a${price}"
+  - "&ePurchased on&f: &a{date} &fat &A{time}"
 
 transaction:
   item: "PAPER:0"
   name: "&b{transaction_id}"
   lore:
-    - "&7Seller&f: &b{seller}"
-    - "&7Buyer&f: &b{buyer}"
+  - "&7Seller&f: &b{seller}"
+  - "&7Buyer&f: &b{buyer}"
 
 gui:
   transactionselect:
@@ -92,19 +127,19 @@ gui:
         item: "STAINED_GLASS_PANE:15"
         name: "&7Select an option"
         lore:
-          - "&7Select an option"
+        - "&7Select an option"
       all:
         item: "PAPER:0"
         name: "&e&lView all transactions"
         lore:
-          - "&7Click to view all the recorded"
-          - "&7transactions made by players."
+        - "&7Click to view all the recorded"
+        - "&7transactions made by players."
       you:
         item: "NETHER_STAR:0"
         name: "&e&lView your transactions"
         lore:
-          - "&7Click to view all the recorded"
-          - "&7transactions made by you."
+        - "&7Click to view all the recorded"
+        - "&7transactions made by you."
   transaction:
     title: "&E&lSelect an Option"
     items:
@@ -112,14 +147,14 @@ gui:
         item: "BOOK:0"
         name: "&e&lAll Transactions"
         lore:
-          - "&7View all the recorded"
-          - "&7transactions by everyone."
+        - "&7View all the recorded"
+        - "&7transactions by everyone."
       playertransactions:
         item: "NETHER_STAR:0"
         name: "&e&lYour Transactions"
         lore:
-          - "&7View all the recorded"
-          - "&7transactions you've made."
+        - "&7View all the recorded"
+        - "&7transactions you've made."
   alltransactions:
     title: "&E&lAll Transactions"
     items:
@@ -127,17 +162,17 @@ gui:
         item: "PAPER:0"
         name: "&e&l<- Previous Page"
         lore:
-          - "&7Go back"
+        - "&7Go back"
       close:
         item: "NETHER_STAR:0"
         name: "&e&lClose"
         lore:
-          - "&7Click to exit this window"
+        - "&7Click to exit this window"
       nextpage:
         item: "PAPER:0"
         name: "&e&lNext Page ->"
         lore:
-          - "&7Next Page"
+        - "&7Next Page"
   playertransactions:
     title: "&E&l{player} Transactions"
     items:
@@ -145,17 +180,17 @@ gui:
         item: "PAPER:0"
         name: "&e&l<- Previous Page"
         lore:
-          - "&7Go back"
+        - "&7Go back"
       close:
         item: "NETHER_STAR:0"
         name: "&e&lClose"
         lore:
-          - "&7Click to exit this window"
+        - "&7Click to exit this window"
       nextpage:
         item: "PAPER:0"
         name: "&e&lNext Page ->"
         lore:
-          - "&7Next Page"
+        - "&7Next Page"
   singletransaction:
     title: "&6&lViewing Transaction"
     items:
@@ -163,50 +198,50 @@ gui:
         item: "STAINED_GLASS_PANE:15"
         name: "&0*"
         lore:
-          - "&0*"
+        - "&0*"
       seller:
         name: "&6&lSeller"
         lore:
-          - "&7Click to view all the"
-          - "&7transactions by this player."
+        - "&7Click to view all the"
+        - "&7transactions by this player."
       buyer:
         name: "&6&lBuyer"
         lore:
-          - "&7Click to view all the"
-          - "&7transactions by this player."
+        - "&7Click to view all the"
+        - "&7transactions by this player."
       you:
         item: "DOUBLE_PLANT:0"
         name: "&6&lView Your Transactions"
         lore:
-          - "&7Click to view all the"
-          - "&7transactions you've done."
+        - "&7Click to view all the"
+        - "&7transactions you've done."
       back:
         item: "NETHER_STAR:0"
         name: "&6&LGo Back"
         lore:
-          - "&7Go back to main transactions"
-          - "&7window selection menu."
+        - "&7Go back to main transactions"
+        - "&7window selection menu."
       auctionhouse:
         item: "CHEST:0"
         name: "&e&lReturn to Auction House"
         lore:
-          - "&7Click here to return to the"
-          - "&7auction house main menu."
+        - "&7Click here to return to the"
+        - "&7auction house main menu."
       startprice:
         item: "STAINED_GLASS_PANE:5"
         name: "&6&lStart Price"
         lore:
-          - "&7Auction started at &a${startprice}"
+        - "&7Auction started at &a${startprice}"
       increment:
         item: "STAINED_GLASS_PANE:5"
         name: "&6&lBid Increment"
         lore:
-          - "&7Bid increment set at &a${bidincrement}"
+        - "&7Bid increment set at &a${bidincrement}"
       buynowprice:
         item: "STAINED_GLASS_PANE:5"
         name: "&6&lBuy Now Price"
         lore:
-          - "&7Buy now price set at &a${buynowprice}"
+        - "&7Buy now price set at &a${buynowprice}"
   active:
     title: "&7Your Current Listings"
     items:
@@ -214,28 +249,28 @@ gui:
         item: "CHEST:0"
         name: "&e&lReturn to Auction House"
         lore:
-          - "&7Click here to return to the"
-          - "&7auction house main menu."
+        - "&7Click here to return to the"
+        - "&7auction house main menu."
       previouspage:
         item: "PAPER:0"
         name: "&e&l<- Previous Page"
         lore:
-          - "&7Go back"
+        - "&7Go back"
       nextpage:
         item: "PAPER:0"
         name: "&e&lNext Page ->"
         lore:
-          - "&7Next Page"
+        - "&7Next Page"
       tutorial:
         item: "BOOK:0"
         name: "&e&lTutorial"
         lore:
-          - "&7These are your current listings, all of"
-          - "&7the items you currently have listed on"
-          - "&7the auction house are displayed here."
-          - ""
-          - "&7You can cancel and view your listing's"
-          - "&7expire time here."
+        - "&7These are your current listings, all of"
+        - "&7the items you currently have listed on"
+        - "&7the auction house are displayed here."
+        - ""
+        - "&7You can cancel and view your listing's"
+        - "&7expire time here."
   collection:
     title: "&7Cancelled / Expired Listings"
     items:
@@ -243,35 +278,35 @@ gui:
         item: "CHEST:0"
         name: "&e&lReturn to Auction House"
         lore:
-          - "&7Click here to return to the"
-          - "&7auction house main menu."
+        - "&7Click here to return to the"
+        - "&7auction house main menu."
       previouspage:
         item: "PAPER:0"
         name: "&e&l<- Previous Page"
         lore:
-          - "&7Go back"
+        - "&7Go back"
       nextpage:
         item: "PAPER:0"
         name: "&e&lPrevious Page ->"
         lore:
-          - "&7Next Page"
+        - "&7Next Page"
       claimall:
         item: "ENDER_CHEST:0"
         name: "&e&lClaim All"
         lore:
-          - "&7Click here to claim all"
-          - "&7your Collection Bin items."
+        - "&7Click here to claim all"
+        - "&7your Collection Bin items."
       tutorial:
         item: "BOOK:0"
         name: "&e&lTutorial"
         lore:
-          - "&7This page houses all of your cancelled and"
-          - "&7expired items, when a listing is cancelled"
-          - "&7or expires you will be able to return that"
-          - "&7item back to you from this menu."
-          - ""
-          - "&7Just click on the item and if you have enough"
-          - "&7inventory space you will receive the item."
+        - "&7This page houses all of your cancelled and"
+        - "&7expired items, when a listing is cancelled"
+        - "&7or expires you will be able to return that"
+        - "&7item back to you from this menu."
+        - ""
+        - "&7Just click on the item and if you have enough"
+        - "&7inventory space you will receive the item."
   confirm:
     title: "&e&lConfirm Purchase"
   auction:
@@ -281,66 +316,71 @@ gui:
         item: "STAINED_GLASS_PANE:14"
         name: "&c&lError"
         lore:
-          - "&cYou do not have enough money!"
+        - "&cYou do not have enough money!"
       guide:
         item: "BOOK:0"
         name: "&e&lGuide"
         lore:
-          - "&7This is the auction house, here you can"
-          - "&7list items for sale and purchase items"
-          - "&7that others have listed for sale."
-          - ""
-          - "&7The auction is also a great way to make"
-          - "&7money by selling farmable items other"
-          - "&7players may be interested in buying."
-          - ""
-          - "&7All sell listings last for a max of &e60 minutes"
-          - "&7unsold items are sent to your collection bin."
-          - ""
-          - "&7Each item is listed as a auction, so"
-          - "&7players can out bid each other, or simply"
-          - "&7purchase it right away with a set price."
-          - ""
-          - "&7For more help, use &e/ah help!"
+        - "&7This is the auction house, here you can"
+        - "&7list items for sale and purchase items"
+        - "&7that others have listed for sale."
+        - ""
+        - "&7The auction is also a great way to make"
+        - "&7money by selling farmable items other"
+        - "&7players may be interested in buying."
+        - ""
+        - "&7All sell listings last for a max of &e60 minutes"
+        - "&7unsold items are sent to your collection bin."
+        - ""
+        - "&7Each item is listed as a auction, so"
+        - "&7players can out bid each other, or simply"
+        - "&7purchase it right away with a set price."
+        - ""
+        - "&7For more help, use &e/ah help!"
+      transactions:
+        item: "PAPER:0"
+        name: "&e&lTransactions"
+        lore:
+        - "&7Click to view transaction history"
       howtosell:
         item: "GOLD_INGOT:0"
         name: "&e&lHow to Sell"
         lore:
-          - "&7To list an item on the auction house, just hold"
-          - "&7the item in your hand and type the following command."
-          - "&e/ah sell <buyNowPrice> <startPrice> <bidIncrement>"
+        - "&7To list an item on the auction house, just hold"
+        - "&7the item in your hand and type the following command."
+        - "&e/ah sell <buyNowPrice> <startPrice> <bidIncrement>"
       yourauctions:
         item: "DIAMOND:0"
         name: "&e&lYour Auctions"
         lore:
-          - "&7Click here to view all of the items you"
-          - "&7are currently selling on the auction."
-          - ""
-          - "&e&l{active_player_auctions} Item(s)"
+        - "&7Click here to view all of the items you"
+        - "&7are currently selling on the auction."
+        - ""
+        - "&e&l{active_player_auctions} Item(s)"
       collectionbin:
         item: "ENDER_CHEST:0"
         name: "&e&lCollection Bin"
         lore:
-          - "&7Click here to view and collect all of the"
-          - "&7items you have cancelled or have expired."
-          - ""
-          - "&e&l{expired_player_auctions} Item(s)"
+        - "&7Click here to view and collect all of the"
+        - "&7items you have cancelled or have expired."
+        - ""
+        - "&e&l{expired_player_auctions} Item(s)"
       previouspage:
         item: "PAPER:0"
         name: "&E&L<- Previous Page"
         lore:
-          - "&7View the previous page of auctions."
+        - "&7View the previous page of auctions."
       nextpage:
         item: "PAPER:0"
         name: "&e&lNext Page ->"
         lore:
-          - "&7View the next page of auctions."
+        - "&7View the next page of auctions."
       refresh:
         item: "CHEST:0"
         name: "&6&lRefresh Auctions"
         lore:
-          - "&7Click to refresh the currently"
-          - "&7available auction listings."
+        - "&7Click to refresh the currently"
+        - "&7available auction listings."
 
 
 
