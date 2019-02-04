@@ -1,17 +1,15 @@
 package com.shadebyte.auctionhouse.auction;
 
 import com.shadebyte.auctionhouse.Core;
+import com.shadebyte.auctionhouse.api.XMaterial;
 import com.shadebyte.auctionhouse.util.NBTEditor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public class Receipt {
 
-    private int total;
+    private long total;
     private String seller, buyer, date, time;
     private Transaction transaction;
 
@@ -40,7 +38,7 @@ public class Receipt {
 
     public ItemStack getReceipt() {
         String[] item = Core.getInstance().getConfig().getString("receipt.item").split(":");
-        ItemStack stack = new ItemStack(Material.valueOf(item[0].toUpperCase()), 1, Short.parseShort(item[1]));
+        ItemStack stack = XMaterial.requestXMaterial(item[0].toUpperCase(), Byte.parseByte(item[1])).parseItem();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Core.getInstance().getConfig().getString("receipt.name")));
         List<String> lore = Core.getInstance().getConfig().getStringList("receipt.lore").stream().map(node -> ChatColor.translateAlternateColorCodes('&', node.replace("{time}", time).replace("{date}", date).replace("{price}", NumberFormat.getInstance().format(total)).replace("{seller}", Bukkit.getOfflinePlayer(UUID.fromString(seller)).getName()))).collect(Collectors.toList());
@@ -50,7 +48,7 @@ public class Receipt {
         return stack;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
