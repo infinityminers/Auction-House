@@ -59,14 +59,13 @@ public class SellCommand extends SubCommand {
         int timeLimit;
         List<Integer> times = new ArrayList<>();
 
-        for (String nodes : Core.getInstance().getConfig().getStringList("time-limits")) {
-            if (p.hasPermission(nodes)) {
-                times.add(Core.getInstance().getConfig().getInt("time-limits." + nodes));
+        Core.getInstance().getConfig().getConfigurationSection("auctiontime").getKeys(false).forEach(perm -> {
+            if (p.hasPermission("auctiontime." + String.valueOf(perm))) {
+                times.add(Core.getInstance().getConfig().getInt("auctiontime." + perm));
             }
-        }
+        });
 
         timeLimit = (times.size() <= 0) ? Core.getInstance().getConfig().getInt("settings.default-auction-time") : Collections.max(times);
-
 
         if (args.length == 1) {
             p.sendMessage(Core.getInstance().getSettings().getPrefix() + Core.getInstance().getLocale().getMessage(Lang.CMD_SELL.getNode()));
@@ -107,7 +106,7 @@ public class SellCommand extends SubCommand {
                         return;
                     }
 
-                    AuctionItem auctionItem = new AuctionItem(p.getUniqueId().toString(), AuctionAPI.getItemInHand(p), Core.getInstance().getConfig().getInt("settings.default-auction-time"), buyNow, 0, buyNow);
+                    AuctionItem auctionItem = new AuctionItem(p.getUniqueId().toString(), AuctionAPI.getItemInHand(p), timeLimit, buyNow, 0, buyNow);
                     AuctionStartEvent auctionStartEvent = new AuctionStartEvent(auctionItem);
                     Core.getInstance().getServer().getPluginManager().callEvent(auctionStartEvent);
 
@@ -207,7 +206,7 @@ public class SellCommand extends SubCommand {
                         return;
                     }
 
-                    AuctionItem auctionItem = new AuctionItem(p.getUniqueId().toString(), AuctionAPI.getItemInHand(p), Core.getInstance().getConfig().getInt("settings.default-auction-time"), startPrice, increment, buyNow);
+                    AuctionItem auctionItem = new AuctionItem(p.getUniqueId().toString(), AuctionAPI.getItemInHand(p), timeLimit, startPrice, increment, buyNow);
                     AuctionStartEvent auctionStartEvent = new AuctionStartEvent(auctionItem);
                     Core.getInstance().getServer().getPluginManager().callEvent(auctionStartEvent);
 
